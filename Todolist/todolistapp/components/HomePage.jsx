@@ -45,7 +45,7 @@ export default function HomePage() {
     fetchList();
     //Set up realtime subscription
     const subscription = supabase
-      .channel("List")
+      .channel("supabase_realtime")
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "List" },
@@ -61,6 +61,9 @@ export default function HomePage() {
         }
       )
       .subscribe();
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
   return (
     <div className="flex flex-col justify-center items-center min-h-svh w-full">
